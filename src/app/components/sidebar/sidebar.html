@@ -1,0 +1,74 @@
+<div class="sidebar">
+    <!-- Logo Section -->
+    <div class="sidebar-header">
+        <div class="logo">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" />
+                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" />
+                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <span class="logo-text">HRMS</span>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <span class="material-icons search-icon">search</span>
+        <input type="text" class="search-input" placeholder="Search here..." [(ngModel)]="searchQuery" />
+    </div>
+
+    <!-- Menu Label -->
+    <div class="menu-label">MENU</div>
+
+    <!-- Main Menu Items -->
+    <nav class="menu-items">
+        <div *ngFor="let item of menuItems" class="menu-item-wrapper">
+            <div class="menu-item" [class.active]="isActive(item.route)" [class.has-children]="item.children"
+                (click)="item.children ? toggleSubmenu(item) : navigate(item.route)">
+                <span class="material-icons menu-icon">{{ item.icon }}</span>
+                <span class="menu-label-text">{{ item.label }}</span>
+
+                <!-- Badge for notifications -->
+                <span *ngIf="item.badge" class="badge">{{ item.badge }}</span>
+
+                <!-- Dropdown arrow for items with children -->
+                <span *ngIf="item.children" class="material-icons dropdown-icon" [class.expanded]="item.expanded">
+                    expand_more
+                </span>
+            </div>
+
+            <!-- Submenu -->
+            <div *ngIf="item.children && item.expanded" class="submenu">
+                <div *ngFor="let child of item.children" class="submenu-item" [class.active]="isActive(child.route)"
+                    (click)="navigate(child.route)">
+                    {{ child.label }}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bottom Menu Items -->
+    <div class="bottom-menu">
+        <div *ngFor="let item of bottomMenuItems" class="menu-item-wrapper">
+            <div class="menu-item" [class.active]="isActive(item.route)" [class.logout]="item.label === 'Log Out'"
+                [class.has-children]="item.children"
+                (click)="item.children ? toggleSubmenu(item) : navigate(item.route)">
+                <span class="material-icons menu-icon">{{ item.icon }}</span>
+                <span class="menu-label-text">{{ item.label }}</span>
+
+                <!-- Dropdown arrow for items with children -->
+                <span *ngIf="item.children" class="material-icons dropdown-icon" [class.expanded]="item.expanded">
+                    expand_more
+                </span>
+            </div>
+
+            <!-- Submenu for bottom items -->
+            <div *ngIf="item.children && item.expanded" class="submenu">
+                <div *ngFor="let child of item.children" class="submenu-item" [class.active]="isActive(child.route)"
+                    (click)="navigate(child.route)">
+                    {{ child.label }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

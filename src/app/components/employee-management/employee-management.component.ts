@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeResponse, EmployeeCreateRequest } from '../../models/employee.model';
 import { finalize } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-employee-management',
@@ -36,7 +37,8 @@ export class EmployeeManagementComponent implements OnInit {
 
     constructor(
         private employeeService: EmployeeService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private toastr: ToastrService
     ) { }
 
     ngOnInit(): void {
@@ -87,11 +89,12 @@ export class EmployeeManagementComponent implements OnInit {
     createEmployee(): void {
         this.employeeService.createEmployee(this.newEmployee).subscribe({
             next: () => {
+                this.toastr.success('Employee created successfully', 'Success');
                 this.closeAddModal();
                 this.loadEmployees();
             },
             error: (error) => {
-                console.error('Error creating employee:', error);
+                this.toastr.error('Failed to create employee', 'Error');
             }
         });
     }
@@ -104,10 +107,10 @@ export class EmployeeManagementComponent implements OnInit {
                 })
             ).subscribe({
                 next: () => {
-                    console.log('Employee exited successfully');
+                    this.toastr.success('Employee exited successfully');
                 },
                 error: (error) => {
-                    console.error('Error exiting employee:', error);
+                    this.toastr.error('Failed to exit employee');
                 }
             });
         }

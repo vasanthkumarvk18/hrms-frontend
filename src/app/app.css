@@ -1,0 +1,14 @@
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    background: #f8f9fa;
+    margin-top: 64px;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 240px;
+    padding: 12px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}

@@ -1,5 +1,5 @@
 export interface Employee {
-    employeeId: string;
+    employeeCode: string;
     firstName: string;
     email: string;
     status: 'ACTIVE' | 'EXITED';
@@ -16,8 +16,14 @@ export interface EmployeeCreateRequest {
 }
 
 export interface EmployeeResponse {
-    employeeId: string;
+    id?: number;
+    employeeCode: string;
     firstName: string;
+    lastName?: string;
     email: string;
+    mobile?: string;
+    departmentId?: number;
+    designationId?: number;
+    dateOfJoining?: string;
     status: string;
 }

@@ -75,7 +75,7 @@
                 <tbody>
                     <tr *ngFor="let employee of filteredEmployees" class="table-row">
                         <td>
-                            <span class="employee-id">{{ employee.employeeId }}</span>
+                            <span class="employee-id">{{ employee.employeeCode }}</span>
                         </td>
                         <td>
                             {{ employee.firstName }}
@@ -90,7 +90,7 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-action btn-exit" (click)="exitEmployee(employee.employeeId)"
+                                <button class="btn-action btn-exit" (click)="exitEmployee(employee.employeeCode)"
                                     *ngIf="employee.status === 'ACTIVE'" title="Exit Employee">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
