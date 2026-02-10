@@ -1,7 +1,7 @@
-<div class="sidebar">
+<div class="sidebar" [class.collapsed]="isCollapsed">
     <!-- Logo Section -->
     <div class="sidebar-header">
-        <div class="logo">
+        <div class="logo" *ngIf="!isCollapsed">
             <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" />
                 <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" />
@@ -9,6 +9,10 @@
             </svg>
             <span class="logo-text">HRMS</span>
         </div>
+        <!-- Toggle Button -->
+        <button class="toggle-btn" (click)="toggleSidebar()" title="Toggle Sidebar">
+            <span class="material-icons">{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</span>
+        </button>
     </div>
 
     <!-- Search Bar -->

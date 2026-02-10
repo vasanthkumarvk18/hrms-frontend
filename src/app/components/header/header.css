@@ -10,12 +10,17 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     z-index: 1000;
     border-bottom: 1px solid #e5e7eb;
+    transition: left 0.3s ease;
+}
+
+.header.sidebar-collapsed {
+    left: 80px !important;
 }
 
 .header-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     height: 100%;
     padding: 0 32px;
     max-width: 100%;
@@ -68,60 +73,7 @@
     gap: 12px;
 }
 
-/* Search Bar */
-.search-container {
-    position: relative;
-    width: 280px;
-}
 
-.search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #9ca3af;
-    font-size: 18px;
-    pointer-events: none;
-}
-
-.search-input {
-    width: 100%;
-    height: 38px;
-    padding: 0 80px 0 40px;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background: #f9fafb;
-    font-size: 13px;
-    font-weight: 400;
-    color: #374151;
-    transition: all 0.2s ease;
-}
-
-.search-input::placeholder {
-    color: #9ca3af;
-}
-
-.search-input:focus {
-    outline: none;
-    background: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-shortcut {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 3px 7px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 500;
-    color: #9ca3af;
-    pointer-events: none;
-}
 
 /* Action Buttons */
 .action-btn {
@@ -237,7 +189,6 @@
     color: #ffffff;
 }
 
-/* Dropdown Styles */
 .dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -419,6 +370,15 @@
 .dropdown-item span:last-child {
     font-size: 14px;
     font-weight: 500;
+}
+
+/* Button-specific styles for dropdown items */
+button.dropdown-item {
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    font-family: inherit;
 }
 
 .dropdown-item.logout {
