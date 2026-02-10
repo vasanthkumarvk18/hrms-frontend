@@ -1,0 +1,167 @@
+<div class="designations-container">
+    <!-- Header Section -->
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="page-title">Designations</h1>
+            </div>
+            <div class="header-center">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search designations..."
+                        [(ngModel)]="searchTerm" (ngModelChange)="filterDesignations()" />
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn-primary" (click)="openAddModal()">
+                    <span class="icon">+</span>
+                    Add Designation
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Statistics Cards -->
+    <section class="stats-section">
+        <div class="stat-card">
+            <div class="stat-icon total">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Total Designations</p>
+                <h2 class="stat-value">{{ totalDesignations }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Max Level</p>
+                <h2 class="stat-value">{{ maxLevel }}</h2>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon exited">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            </div>
+            <div class="stat-info">
+                <p class="stat-label">Total Levels</p>
+                <h2 class="stat-value">{{ totalLevels }}</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- Employee Table -->
+    <section class="table-section">
+        <div class="table-container">
+            <table class="designation-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let designation of filteredDesignation let i = index" class="table-row">
+                        <td>
+                            <span class="designation-id">{{ 1 + i }}</span>
+                        </td>
+                        <td>
+                            <span class="designation-name">{{ designation.name }}</span>
+                        </td>
+                        <td>
+                            <span class="level">{{ designation.level }}</span>
+                        </td>
+                        <!-- <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-exit" (click)="exitEmployee(employee.employeeCode)"
+                                    *ngIf="employee.status === 'ACTIVE'" title="Exit Employee">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td> -->
+                    </tr>
+
+                    <!-- No Data State -->
+                    <tr *ngIf="!isLoading && filteredDesignation.length === 0">
+                        <td colspan="3" class="no-data">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                <p>No Designation found</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Add Employee Modal -->
+    <div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+        <div class="modal" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Add New Designation</h2>
+                <button class="modal-close" (click)="closeAddModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="designationName">Name *</label>
+                            <input type="text" id="designationName" [(ngModel)]="newDesignation.name"
+                                name="designationName" class="form-input" placeholder="Enter designation name"
+                                required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="level">Level *</label>
+                            <input type="number" id="level" [(ngModel)]="newDesignation.level" name="level"
+                                class="form-input" placeholder="Enter level" min="0" required />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary" (click)="closeAddModal()">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn-primary" (click)="createDesignation()">
+                            <span>Create Designation</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

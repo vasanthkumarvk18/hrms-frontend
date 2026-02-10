@@ -1,0 +1,155 @@
+<div class="register-container">
+    <div class="register-card">
+        <!-- Left Section - Branding -->
+        <div class="register-left">
+            <div class="brand-content">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <h1 class="brand-title">Join HRMS</h1>
+                <p class="brand-subtitle">Create your account to get started</p>
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Secure & Reliable</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Easy to Use</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>24/7 Support</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section - Register Form -->
+        <div class="register-right">
+            <div class="register-form-container">
+                <div class="register-header">
+                    <h2>Create Account</h2>
+                    <p>Fill in your details to register</p>
+                </div>
+
+                <form (ngSubmit)="onSubmit()" class="register-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <input type="text" id="username" [(ngModel)]="registerRequest.username" name="username"
+                                class="form-input" placeholder="Choose a username" required [disabled]="isLoading" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <polyline points="17 11 19 13 23 9"></polyline>
+                            </svg>
+                            <select id="role" [(ngModel)]="registerRequest.role" name="role"
+                                class="form-input form-select" required [disabled]="isLoading">
+                                <option *ngFor="let role of roles" [value]="role.value">
+                                    {{ role.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <input [type]="showPassword ? 'text' : 'password'" id="password"
+                                [(ngModel)]="registerRequest.password" name="password" class="form-input"
+                                placeholder="Create a password" required [disabled]="isLoading" />
+                            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
+                                [disabled]="isLoading">
+                                <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg *ngIf="showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                    </path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+                                [(ngModel)]="confirmPassword" name="confirmPassword" class="form-input"
+                                placeholder="Confirm your password" required [disabled]="isLoading" />
+                            <button type="button" class="password-toggle" (click)="toggleConfirmPasswordVisibility()"
+                                [disabled]="isLoading">
+                                <svg *ngIf="!showConfirmPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg *ngIf="showConfirmPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                    </path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-register" [disabled]="isLoading">
+                        <span *ngIf="!isLoading">Create Account</span>
+                        <span *ngIf="isLoading" class="loading-spinner">
+                            <svg class="spinner" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3">
+                                </circle>
+                            </svg>
+                            Creating account...
+                        </span>
+                    </button>
+
+                    <div class="form-footer">
+                        <p>Already have an account? <a routerLink="/login" class="login-link">Sign in here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

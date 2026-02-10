@@ -19,7 +19,7 @@ export class EmployeeManagementComponent implements OnInit {
     filteredEmployees: EmployeeResponse[] = [];
 
     showAddModal = false;
-    searchTerm = '';
+
 
     newEmployee: EmployeeCreateRequest = {
         firstName: '',

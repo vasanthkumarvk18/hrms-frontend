@@ -23,3 +23,9 @@ body {
     height: 100%;
     width: 100%;
 }
+
+/* Prevent scrollbars on auth pages */
+body:has(.login-container),
+body:has(.register-container) {
+    overflow: hidden;
+}

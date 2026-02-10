@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,9 @@ interface MenuItem {
 })
 export class Sidebar {
   searchQuery = '';
+  isCollapsed = false;
+
+  @Output() sidebarToggled = new EventEmitter<boolean>();
 
   menuItems: MenuItem[] = [
     {
@@ -40,7 +43,7 @@ export class Sidebar {
       children: [
         { label: 'Employee List', icon: '', route: '/employees' },
         { label: 'Departments', icon: '', route: '/employees/departments' },
-        { label: 'Designations', icon: '', route: '/employees/designations' },
+        { label: 'Designations', icon: '', route: '/employees/designation' },
         { label: 'Employee Documents', icon: '', route: '/employees/documents' }
       ]
     },
@@ -152,6 +155,11 @@ export class Sidebar {
   ];
 
   constructor(private router: Router) { }
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+    this.sidebarToggled.emit(this.isCollapsed);
+  }
 
   toggleSubmenu(item: MenuItem) {
     if (item.children) {

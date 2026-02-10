@@ -1,38 +1,10 @@
-<header class="header">
+<header class="header" [class.sidebar-collapsed]="isSidebarCollapsed">
     <div class="header-container">
-        <!-- Left Section: Navigation Menu -->
-        <nav class="nav-menu">
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
-                Dashboard
-            </a>
-            <a routerLink="/leave" routerLinkActive="active" class="nav-item">
-                Leave
-            </a>
-            <a routerLink="/attendance" routerLinkActive="active" class="nav-item">
-                Attendance
-            </a>
-            <a routerLink="/performance" routerLinkActive="active" class="nav-item">
-                Performance
-            </a>
-            <a routerLink="/payroll" routerLinkActive="active" class="nav-item">
-                Payroll
-            </a>
-        </nav>
+
+
 
         <!-- Right Section: Search, Actions & User -->
         <div class="header-right">
-            <!-- Search Bar -->
-            <div class="search-container">
-                <span class="material-icons search-icon">search</span>
-                <input type="text" class="search-input" placeholder="Search anything..." [(ngModel)]="searchQuery"
-                    (keyup.enter)="onSearch()" />
-            </div>
-
-            <!-- Quick Actions -->
-            <button class="action-btn" title="Calendar">
-                <span class="material-icons">event</span>
-            </button>
-
             <!-- Notifications -->
             <div class="notification-wrapper">
                 <button class="notification-btn" (click)="toggleNotifications()" [class.active]="showNotifications()">
@@ -102,10 +74,10 @@
                             <span>Help & Support</span>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item logout" (click)="logout()">
+                        <button type="button" class="dropdown-item logout" (click)="logout()">
                             <span class="material-icons">logout</span>
                             <span>Logout</span>
-                        </a>
+                        </button>
                     </div>
                 </div>
                 }
