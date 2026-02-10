@@ -1,0 +1,160 @@
+<div class="attendance-container">
+  <!-- Header Section -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="page-title">Attendance Management</h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Alert Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    ✓ {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-error">
+    ✗ {{ errorMessage }}
+  </div>
+
+  <!-- Quick Actions Section -->
+  <section class="actions-section">
+    <div class="action-card">
+      <div class="form-group">
+        <label for="employeeCode">Employee Code</label>
+        <input type="text" id="employeeCode" [(ngModel)]="employeeCode" placeholder="Enter employee code"
+          class="form-input" />
+      </div>
+      <div class="button-group">
+        <button class="btn-primary" (click)="checkIn()" [disabled]="loading || !employeeCode">
+          <span class="icon">🟢</span> Check In
+        </button>
+        <button class="btn-secondary" (click)="checkOut()" [disabled]="loading || !employeeCode">
+          <span class="icon">🔴</span> Check Out
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary Cards -->
+  <section class="stats-section">
+    <div class="stat-card" *ngIf="dailySummary">
+      <div class="stat-icon daily">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <p class="stat-label">Today's Hours</p>
+        <h2 class="stat-value">{{ dailySummary.totalHours | number:'1.1-1' }}h</h2>
+      </div>
+    </div>
+
+    <div class="stat-card" *ngIf="dailySummary">
+      <div class="stat-icon status" [ngClass]="getStatusIconClass(dailySummary.status)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <div class="stat-info">
+        <p class="stat-label">Status</p>
+        <h2 class="stat-value-small">{{ dailySummary.status }}</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary Controls -->
+  <section class="summary-section">
+    <div class="summary-card">
+      <h3 class="section-title">Daily Summary</h3>
+      <div class="summary-controls">
+        <input type="date" [(ngModel)]="selectedDate" class="form-input" />
+        <button class="btn-primary" (click)="loadDailySummary()" [disabled]="loading || !employeeCode">
+          Load Summary
+        </button>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <h3 class="section-title">Monthly Summary</h3>
+      <div class="summary-controls">
+        <select [(ngModel)]="selectedMonth" class="form-input">
+          <option [value]="1">January</option>
+          <option [value]="2">February</option>
+          <option [value]="3">March</option>
+          <option [value]="4">April</option>
+          <option [value]="5">May</option>
+          <option [value]="6">June</option>
+          <option [value]="7">July</option>
+          <option [value]="8">August</option>
+          <option [value]="9">September</option>
+          <option [value]="10">October</option>
+          <option [value]="11">November</option>
+          <option [value]="12">December</option>
+        </select>
+        <input type="number" [(ngModel)]="selectedYear" placeholder="Year" class="form-input" />
+        <button class="btn-primary" (click)="loadMonthlySummary()" [disabled]="loading || !employeeCode">
+          Load Summary
+        </button>
+      </div>
+
+      <div *ngIf="monthlySummary" class="monthly-stats">
+        <div class="monthly-stat" *ngFor="let key of monthlySummary | keyvalue">
+          <span class="monthly-label">{{ formatLabel(key.key) }}:</span>
+          <span class="monthly-value">{{ key.value }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attendance History Table -->
+  <section class="table-section">
+    <div class="section-header">
+      <h3 class="section-title">Attendance History</h3>
+      <button class="btn-secondary" (click)="loadAttendanceHistory()" [disabled]="loading || !employeeCode">
+        🔄 Refresh
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">Loading...</div>
+
+    <div *ngIf="!loading && attendanceHistory.length === 0" class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <p>No attendance records found</p>
+    </div>
+
+    <div *ngIf="!loading && attendanceHistory.length > 0" class="table-container">
+      <table class="attendance-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Session</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of attendanceHistory">
+            <td>{{ formatDate(record.date) }}</td>
+            <td>{{ formatTime(record.checkIn) }}</td>
+            <td>{{ formatTime(record.checkOut) }}</td>
+            <td>
+              <span class="session-badge">{{ record.sessionNo || 'N/A' }}</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(record?.status)">
+                {{ record?.status || 'In Progress' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

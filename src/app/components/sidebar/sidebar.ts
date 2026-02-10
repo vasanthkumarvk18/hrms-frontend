@@ -49,8 +49,7 @@ export class Sidebar {
       icon: 'schedule',
       expanded: false,
       children: [
-        { label: 'Check-in / Check-out', icon: '', route: '/attendance/checkin' },
-        { label: 'Daily Attendance', icon: '', route: '/attendance/daily' },
+        { label: 'Attendance Dashboard', icon: '', route: '/attendance' },
         { label: 'Shift Management', icon: '', route: '/attendance/shifts' },
         { label: 'Timesheets', icon: '', route: '/attendance/timesheets' },
         { label: 'Overtime', icon: '', route: '/attendance/overtime' }
