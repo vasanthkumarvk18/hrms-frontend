@@ -14,21 +14,19 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './login.css'
 })
 export class LoginComponent {
+
   loginRequest: LoginRequest = {
     username: '',
     password: ''
   };
 
-  isLoading = false;
   showPassword = false;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService
-  ) {
-    // Guard handles redirect if already logged in
-  }
+  ) { }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -40,21 +38,13 @@ export class LoginComponent {
       return;
     }
 
-    this.isLoading = true;
     this.authService.login(this.loginRequest).subscribe({
-      next: (response) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.toastr.success('Login successful!', 'Welcome');
-          this.router.navigate(['/employees']);
-        });
+      next: () => {
+        this.toastr.success('Login successful!', 'Welcome');
+        this.router.navigate(['/employees']);
       },
-      error: (error) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.toastr.error('Invalid username or password', 'Login Failed');
-          console.error('Login error:', error);
-        });
+      error: () => {
+        this.toastr.error('Invalid username or password', 'Login Failed');
       }
     });
   }

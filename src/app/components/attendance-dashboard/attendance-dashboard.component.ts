@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AttendanceService } from '../../services/attendance.service';
 import { Attendance, DailySummary, MonthlySummary } from '../../models/attendance.model';
-
 
 @Component({
     selector: 'app-attendance-dashboard',
@@ -25,7 +24,7 @@ export class AttendanceDashboardComponent implements OnInit {
     errorMessage: string = '';
     loading: boolean = false;
 
-    constructor(private attendanceService: AttendanceService, private cdr: ChangeDetectorRef) { }
+    constructor(private attendanceService: AttendanceService) { }
 
     ngOnInit(): void {
         this.selectedDate = this.getTodayDate();
@@ -51,10 +50,7 @@ export class AttendanceDashboardComponent implements OnInit {
                 console.log('Check-in successful:', response);
                 this.showSuccess('Checked in successfully!');
                 this.loading = false;
-                // Optionally reload history
                 this.loadAttendanceHistory();
-                // this.loadDailySummary();
-                this.cdr.detectChanges();
             },
             error: (error) => {
                 console.error('Check-in error:', error);
@@ -74,7 +70,6 @@ export class AttendanceDashboardComponent implements OnInit {
 
                 this.showError(errorMessage);
                 this.loading = false;
-                this.cdr.detectChanges();
             }
         });
     }
@@ -94,10 +89,7 @@ export class AttendanceDashboardComponent implements OnInit {
                 console.log('Check-out successful:', response);
                 this.showSuccess('Checked out successfully!');
                 this.loading = false;
-                // Optionally reload history
                 this.loadAttendanceHistory();
-                // this.loadDailySummary();
-                this.cdr.detectChanges();
             },
             error: (error) => {
                 console.error('Check-out error:', error);
@@ -117,7 +109,6 @@ export class AttendanceDashboardComponent implements OnInit {
 
                 this.showError(errorMessage);
                 this.loading = false;
-                this.cdr.detectChanges();
             }
         });
     }
@@ -133,12 +124,9 @@ export class AttendanceDashboardComponent implements OnInit {
             next: (response) => {
                 console.log('Attendance history loaded:', response);
                 this.attendanceHistory = response ?? [];
-                this.cdr.detectChanges();
             },
             error: (error) => {
                 console.error('Failed to load attendance history:', error);
-                // Don't show error to user, just log it
-                this.cdr.detectChanges();
             }
         });
     }
@@ -154,12 +142,10 @@ export class AttendanceDashboardComponent implements OnInit {
             next: (response) => {
                 this.dailySummary = response;
                 this.loading = false;
-                this.cdr.detectChanges();
             },
             error: (error) => {
                 this.showError('Failed to load daily summary: ' + (error.error?.message || error.message));
                 this.loading = false;
-                this.cdr.detectChanges();
             }
         });
     }
@@ -175,19 +161,16 @@ export class AttendanceDashboardComponent implements OnInit {
             next: (response) => {
                 this.monthlySummary = response;
                 this.loading = false;
-                this.cdr.detectChanges();
             },
             error: (error) => {
                 this.showError('Failed to load monthly summary: ' + (error.error?.message || error.message));
                 this.loading = false;
-                this.cdr.detectChanges();
             }
         });
     }
 
     formatTime(time: string | undefined): string {
         if (!time) return 'N/A';
-        // Backend sends LocalTime, format it nicely
         return time;
     }
 
@@ -205,11 +188,10 @@ export class AttendanceDashboardComponent implements OnInit {
     showError(message: string): void {
         this.errorMessage = message;
         this.successMessage = '';
-        setTimeout(() => this.errorMessage = '', 10000); // 10 seconds for errors
+        setTimeout(() => this.errorMessage = '', 10000);
     }
 
     formatLabel(key: string): string {
-        // Convert camelCase to Title Case
         return key.replace(/([A-Z])/g, ' $1')
             .replace(/^./, str => str.toUpperCase());
     }

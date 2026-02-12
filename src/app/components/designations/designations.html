@@ -24,50 +24,6 @@
         </div>
     </header>
 
-    <!-- Statistics Cards -->
-    <section class="stats-section">
-        <div class="stat-card">
-            <div class="stat-icon total">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-            </div>
-            <div class="stat-info">
-                <p class="stat-label">Total Designations</p>
-                <h2 class="stat-value">{{ totalDesignations }}</h2>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon active">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-            </div>
-            <div class="stat-info">
-                <p class="stat-label">Max Level</p>
-                <h2 class="stat-value">{{ maxLevel }}</h2>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon exited">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                </svg>
-            </div>
-            <div class="stat-info">
-                <p class="stat-label">Total Levels</p>
-                <h2 class="stat-value">{{ totalLevels }}</h2>
-            </div>
-        </div>
-    </section>
 
     <!-- Employee Table -->
     <section class="table-section">
@@ -81,7 +37,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let designation of filteredDesignation let i = index" class="table-row">
+                    <tr *ngFor="let designation of filteredDesignations() let i = index" class="table-row">
                         <td>
                             <span class="designation-id">{{ 1 + i }}</span>
                         </td>
@@ -106,7 +62,7 @@
                     </tr>
 
                     <!-- No Data State -->
-                    <tr *ngIf="!isLoading && filteredDesignation.length === 0">
+                    <tr *ngIf="filteredDesignations().length === 0">
                         <td colspan="3" class="no-data">
                             <div class="empty-state">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

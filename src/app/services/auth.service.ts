@@ -1,6 +1,6 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { JwtResponse, LoginRequest, RegisterRequest } from '../models/auth.model';
 import { Router } from '@angular/router';
@@ -9,16 +9,12 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class AuthService {
+    private http = inject(HttpClient);
+    private router = inject(Router);
+    private platformId = inject(PLATFORM_ID);
     private apiUrl = 'http://localhost:8080/api/auth';
-    private isBrowser: boolean;
+    private isBrowser = isPlatformBrowser(this.platformId);
 
-    constructor(
-        private http: HttpClient,
-        private router: Router,
-        @Inject(PLATFORM_ID) platformId: Object
-    ) {
-        this.isBrowser = isPlatformBrowser(platformId);
-    }
 
     login(request: LoginRequest): Observable<JwtResponse> {
         return this.http.post<JwtResponse>(`${this.apiUrl}/login`, request).pipe(
@@ -44,23 +40,17 @@ export class AuthService {
     }
 
     isLoggedIn(): boolean {
-        if (!this.isBrowser) {
-            return false;
-        }
+        if (!this.isBrowser) return false;
         return !!localStorage.getItem('token');
     }
 
     getToken(): string | null {
-        if (!this.isBrowser) {
-            return null;
-        }
+        if (!this.isBrowser) return null;
         return localStorage.getItem('token');
     }
 
     getUsername(): string | null {
-        if (!this.isBrowser) {
-            return null;
-        }
+        if (!this.isBrowser) return null;
         return localStorage.getItem('username');
     }
 }

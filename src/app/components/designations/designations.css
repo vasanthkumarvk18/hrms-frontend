@@ -1,7 +1,6 @@
 .designations-container {
     min-height: 100vh;
     background: #f8fafc;
-    padding: 0rem;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -19,7 +18,6 @@
     padding: 1rem;
     border: 1px solid #e2e8f0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    gap: 1.5rem;
 }
 
 .header-left {
@@ -73,10 +71,17 @@
 }
 
 .page-title {
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 500;
     color: #1e293b;
     margin: 0;
+}
+
+.page-subtitle {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 0.5rem 0 0 0;
+    font-weight: 400;
 }
 
 /* Refresh Button */
@@ -143,46 +148,6 @@
     gap: 0.75rem;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.page-subtitle {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin: 0.5rem 0 0 0;
-    font-weight: 400;
-}
 
 /* Buttons */
 .btn-primary {
@@ -617,4 +582,38 @@ select.form-input {
     font-size: 1.125rem;
     font-weight: 500;
     margin: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }

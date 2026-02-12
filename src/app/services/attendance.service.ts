@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Attendance, DailySummary, MonthlySummary } from '../models/attendance.model';
 
@@ -13,18 +13,12 @@ export class AttendanceService {
 
     // Check-in
     checkIn(employeeCode: string): Observable<Attendance> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json'
-        });
-        return this.http.post<Attendance>(`${this.apiUrl}/check-in/${employeeCode}`, {}, { headers });
+        return this.http.post<Attendance>(`${this.apiUrl}/check-in/${employeeCode}`, {});
     }
 
     // Check-out
     checkOut(employeeCode: string): Observable<Attendance> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json'
-        });
-        return this.http.post<Attendance>(`${this.apiUrl}/check-out/${employeeCode}`, {}, { headers });
+        return this.http.post<Attendance>(`${this.apiUrl}/check-out/${employeeCode}`, {});
     }
 
     // Get attendance history by employee

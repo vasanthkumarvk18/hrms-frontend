@@ -5,6 +5,16 @@
             <div class="header-left">
                 <h1 class="page-title">Employee Management</h1>
             </div>
+            <div class="header-center">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search Employee..." [(ngModel)]="searchTerm"
+                        (ngModelChange)="applyFilter()" />
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+            </div>
             <div class="header-right">
                 <button class="btn-primary" (click)="openAddModal()">
                     <span class="icon">+</span>
@@ -27,7 +37,7 @@
             </div>
             <div class="stat-info">
                 <p class="stat-label">Total Employees</p>
-                <h2 class="stat-value">{{ totalEmployees }}</h2>
+                <h2 class="stat-value">{{ stats().total }}</h2>
             </div>
         </div>
 
@@ -40,7 +50,7 @@
             </div>
             <div class="stat-info">
                 <p class="stat-label">Active</p>
-                <h2 class="stat-value">{{ activeEmployees }}</h2>
+                <h2 class="stat-value">{{ stats().active }}</h2>
             </div>
         </div>
 
@@ -54,7 +64,7 @@
             </div>
             <div class="stat-info">
                 <p class="stat-label">Exited</p>
-                <h2 class="stat-value">{{ exitedEmployees }}</h2>
+                <h2 class="stat-value">{{ stats().exited }}</h2>
             </div>
         </div>
     </section>
@@ -68,20 +78,28 @@
                         <th>Employee ID</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Date of Joining</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let employee of filteredEmployees" class="table-row">
+                    <tr *ngFor="let employee of filteredEmployees()" class="table-row">
                         <td>
                             <span class="employee-id">{{ employee.employeeCode }}</span>
                         </td>
                         <td>
-                            {{ employee.firstName }}
+                            {{ employee.firstName }} {{ employee.lastName }}
                         </td>
                         <td>
                             <span class="employee-email">{{ employee.email }}</span>
+                        </td>
+                        <td>
+                            {{ employee.mobile || '-' }}
+                        </td>
+                        <td>
+                            {{ employee.dateOfJoining || '-' }}
                         </td>
                         <td>
                             <span [class]="'status-badge ' + getStatusClass(employee.status)">
@@ -101,8 +119,8 @@
                             </div>
                         </td>
                     </tr>
-                    <tr *ngIf="filteredEmployees.length === 0">
-                        <td colspan="5" class="no-data">
+                    <tr *ngIf="filteredEmployees().length === 0">
+                        <td colspan="9" class="no-data">
                             <div class="empty-state">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -135,6 +153,24 @@
                 <form>
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="employeeCode">Employee Code</label>
+                            <input type="text" id="employeeCode" [(ngModel)]="newEmployee.employeeCode"
+                                name="employeeCode" class="form-input" placeholder="Enter employee code" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" [(ngModel)]="newEmployee.gender" name="gender" class="form-input">
+                                <option value="">Select Gender</option>
+                                <option value="MALE">Male</option>
+                                <option value="FEMALE">Female</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
                             <label for="firstName">First Name *</label>
                             <input type="text" id="firstName" [(ngModel)]="newEmployee.firstName" name="firstName"
                                 class="form-input" placeholder="Enter first name" required />
@@ -149,6 +185,29 @@
 
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" [(ngModel)]="newEmployee.dob" name="dob" class="form-input" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bloodGroup">Blood Group</label>
+                            <select id="bloodGroup" [(ngModel)]="newEmployee.bloodGroup" name="bloodGroup"
+                                class="form-input">
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
                             <label for="email">Email Address *</label>
                             <input type="email" id="email" [(ngModel)]="newEmployee.email" name="email"
                                 class="form-input" placeholder="Enter email address" required />
@@ -158,6 +217,26 @@
                             <label for="mobile">Mobile Number *</label>
                             <input type="tel" id="mobile" [(ngModel)]="newEmployee.mobile" name="mobile"
                                 class="form-input" placeholder="Enter mobile number" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="maritalStatus">Marital Status</label>
+                            <select id="maritalStatus" [(ngModel)]="newEmployee.maritalStatus" name="maritalStatus"
+                                class="form-input">
+                                <option value="">Select Status</option>
+                                <option value="SINGLE">Single</option>
+                                <option value="MARRIED">Married</option>
+                                <option value="DIVORCED">Divorced</option>
+                                <option value="WIDOWED">Widowed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="profilePhotoUrl">Profile Photo URL</label>
+                            <input type="url" id="profilePhotoUrl" [(ngModel)]="newEmployee.profilePhotoUrl"
+                                name="profilePhotoUrl" class="form-input" placeholder="Enter profile photo URL" />
                         </div>
                     </div>
 
@@ -187,10 +266,38 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="dateOfJoining">Date of Joining *</label>
-                        <input type="date" id="dateOfJoining" [(ngModel)]="newEmployee.dateOfJoining"
-                            name="dateOfJoining" class="form-input" required />
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="managerId">Manager ID</label>
+                            <input type="number" id="managerId" [(ngModel)]="newEmployee.managerId" name="managerId"
+                                class="form-input" placeholder="Enter manager ID" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="employmentType">Employment Type</label>
+                            <select id="employmentType" [(ngModel)]="newEmployee.employmentType" name="employmentType"
+                                class="form-input">
+                                <option value="">Select Type</option>
+                                <option value="FULL_TIME">Full Time</option>
+                                <option value="PART_TIME">Part Time</option>
+                                <option value="CONTRACT">Contract</option>
+                                <option value="INTERN">Intern</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateOfJoining">Date of Joining *</label>
+                            <input type="date" id="dateOfJoining" [(ngModel)]="newEmployee.dateOfJoining"
+                                name="dateOfJoining" class="form-input" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="probationEndDate">Probation End Date</label>
+                            <input type="date" id="probationEndDate" [(ngModel)]="newEmployee.probationEndDate"
+                                name="probationEndDate" class="form-input" />
+                        </div>
                     </div>
 
                     <div class="modal-footer">

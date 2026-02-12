@@ -54,7 +54,7 @@
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                             <input type="text" id="username" [(ngModel)]="registerRequest.username" name="username"
-                                class="form-input" placeholder="Choose a username" required [disabled]="isLoading" />
+                                class="form-input" placeholder="Choose a username" required />
                         </div>
                     </div>
 
@@ -68,7 +68,7 @@
                                 <polyline points="17 11 19 13 23 9"></polyline>
                             </svg>
                             <select id="role" [(ngModel)]="registerRequest.role" name="role"
-                                class="form-input form-select" required [disabled]="isLoading">
+                                class="form-input form-select" required>
                                 <option *ngFor="let role of roles" [value]="role.value">
                                     {{ role.label }}
                                 </option>
@@ -86,9 +86,8 @@
                             </svg>
                             <input [type]="showPassword ? 'text' : 'password'" id="password"
                                 [(ngModel)]="registerRequest.password" name="password" class="form-input"
-                                placeholder="Create a password" required [disabled]="isLoading" />
-                            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
-                                [disabled]="isLoading">
+                                placeholder="Create a password" required />
+                            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
                                 <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -115,9 +114,8 @@
                             </svg>
                             <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
                                 [(ngModel)]="confirmPassword" name="confirmPassword" class="form-input"
-                                placeholder="Confirm your password" required [disabled]="isLoading" />
-                            <button type="button" class="password-toggle" (click)="toggleConfirmPasswordVisibility()"
-                                [disabled]="isLoading">
+                                placeholder="Confirm your password" required />
+                            <button type="button" class="password-toggle" (click)="toggleConfirmPasswordVisibility()">
                                 <svg *ngIf="!showConfirmPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -134,15 +132,8 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-register" [disabled]="isLoading">
-                        <span *ngIf="!isLoading">Create Account</span>
-                        <span *ngIf="isLoading" class="loading-spinner">
-                            <svg class="spinner" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3">
-                                </circle>
-                            </svg>
-                            Creating account...
-                        </span>
+                    <button type="submit" class="btn-register">
+                        <span>Create Account</span>
                     </button>
 
                     <div class="form-footer">

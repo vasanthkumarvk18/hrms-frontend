@@ -54,7 +54,7 @@
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                             <input type="text" id="username" [(ngModel)]="loginRequest.username" name="username"
-                                class="form-input" placeholder="Enter your username" required [disabled]="isLoading" />
+                                class="form-input" placeholder="Enter your username" required />
                         </div>
                     </div>
 
@@ -68,9 +68,9 @@
                             </svg>
                             <input [type]="showPassword ? 'text' : 'password'" id="password"
                                 [(ngModel)]="loginRequest.password" name="password" class="form-input"
-                                placeholder="Enter your password" required [disabled]="isLoading" />
+                                placeholder="Enter your password" required />
                             <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
-                                [disabled]="isLoading">
+                                >
                                 <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -87,15 +87,8 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-login" [disabled]="isLoading">
-                        <span *ngIf="!isLoading">Sign In</span>
-                        <span *ngIf="isLoading" class="loading-spinner">
-                            <svg class="spinner" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3">
-                                </circle>
-                            </svg>
-                            Signing in...
-                        </span>
+                    <button type="submit" class="btn-login">
+                        <span >Sign In</span>
                     </button>
 
                     <div class="form-footer">

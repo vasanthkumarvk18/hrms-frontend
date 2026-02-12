@@ -21,7 +21,6 @@ export class RegisterComponent {
   };
 
   confirmPassword = '';
-  isLoading = false;
   showPassword = false;
   showConfirmPassword = false;
 
@@ -36,9 +35,7 @@ export class RegisterComponent {
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService
-  ) {
-    // Guard handles redirect if already logged in
-  }
+  ) { }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -70,21 +67,14 @@ export class RegisterComponent {
       return;
     }
 
-    this.isLoading = true;
     this.authService.register(this.registerRequest).subscribe({
       next: (response) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.toastr.success('Registration successful! Please login.', 'Success');
-          this.router.navigate(['/login']);
-        });
+        this.toastr.success('Registration successful! Please login.', 'Success');
+        this.router.navigate(['/login']);
       },
       error: (error) => {
-        setTimeout(() => {
-          this.isLoading = false;
-          this.toastr.error('Registration failed. Username may already exist.', 'Error');
-          console.error('Registration error:', error);
-        });
+        this.toastr.error('Registration failed. Username may already exist.', 'Error');
+        console.error('Registration error:', error);
       }
     });
   }

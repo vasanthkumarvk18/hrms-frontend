@@ -29,3 +29,13 @@ body:has(.login-container),
 body:has(.register-container) {
     overflow: hidden;
 }
+
+/* Hide scrollbar for all elements while maintaining scroll functionality */
+* {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
