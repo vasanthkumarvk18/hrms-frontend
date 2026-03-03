@@ -46,15 +46,15 @@
 
                 <form (ngSubmit)="onSubmit()" class="register-form">
                     <div class="form-group">
-                        <label for="username">Username</label>
+                        <label for="email">Email</label>
                         <div class="input-wrapper">
                             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
-                            <input type="text" id="username" [(ngModel)]="registerRequest.username" name="username"
-                                class="form-input" placeholder="Choose a username" required />
+                            <input type="email" id="email" [(ngModel)]="registerRequest.email" name="email"
+                                class="form-input" placeholder="Enter your email" required />
                         </div>
                     </div>
 

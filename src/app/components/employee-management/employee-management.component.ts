@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeResponse, EmployeeCreateRequest } from '../../models/employee.model';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-employee-management',
@@ -15,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 export class EmployeeManagementComponent implements OnInit {
     private employeeService = inject(EmployeeService);
     private toastr = inject(ToastrService);
+    public authService = inject(AuthService);
 
     employees = signal<EmployeeResponse[]>([]);
     filteredEmployees = signal<EmployeeResponse[]>([]);

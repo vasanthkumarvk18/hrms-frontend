@@ -15,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RegisterComponent {
   registerRequest: RegisterRequest = {
-    username: '',
+    email: '',
     password: '',
     role: 'EMPLOYEE'
   };
@@ -25,9 +25,6 @@ export class RegisterComponent {
   showConfirmPassword = false;
 
   roles = [
-    { value: 'ADMIN', label: 'Administrator' },
-    { value: 'HR', label: 'HR Manager' },
-    { value: 'MANAGER', label: 'Manager' },
     { value: 'EMPLOYEE', label: 'Employee' }
   ];
 
@@ -47,13 +44,13 @@ export class RegisterComponent {
 
   onSubmit(): void {
     // Validation
-    if (!this.registerRequest.username || !this.registerRequest.password || !this.confirmPassword) {
+    if (!this.registerRequest.email || !this.registerRequest.password || !this.confirmPassword) {
       this.toastr.error('Please fill in all fields', 'Validation Error');
       return;
     }
 
-    if (this.registerRequest.username.length < 3) {
-      this.toastr.error('Username must be at least 3 characters', 'Validation Error');
+    if (this.registerRequest.email.length < 3) {
+      this.toastr.error('Email must be at least 3 characters', 'Validation Error');
       return;
     }
 
@@ -73,7 +70,7 @@ export class RegisterComponent {
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        this.toastr.error('Registration failed. Username may already exist.', 'Error');
+        this.toastr.error('Registration failed. Email may already exist.', 'Error');
         console.error('Registration error:', error);
       }
     });

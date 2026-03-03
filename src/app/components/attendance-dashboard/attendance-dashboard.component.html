@@ -1,68 +1,299 @@
-<div class="attendance-container">
+<div class="dashboard-container" *ngIf="showDashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="dashboard-title">
+      HR Attendance Dashboard <i class="bi bi-info-circle text-mute" style="font-size: 1rem;"></i>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+      <!-- Search Bar -->
+      <div class="dashboard-search">
+        <input type="text" placeholder="Search by Employee ID" [ngModel]="employeeCode()"
+          (ngModelChange)="employeeCode.set($event)" (keyup.enter)="onSearch()">
+        <i class="bi bi-search" (click)="onSearch()"></i>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-btn"><i class="bi bi-arrow-clockwise"></i></button>
+        <button class="icon-btn"><i class="bi bi-arrow-repeat"></i></button>
+        <button class="icon-btn"><i class="bi bi-link-45deg"></i></button>
+        <button class="icon-btn"><i class="bi bi-arrows-angle-expand"></i></button>
+        <button class="icon-btn"><i class="bi bi-three-dots"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Grid Layout -->
+  <div class="dashboard-grid">
+
+    <!-- 1. Date Filter -->
+    <div class="card filter-card">
+      <span class="card-title">Date</span>
+      <div class="input-group">
+        <input type="date" [(ngModel)]="dashboardSelectedDate" (change)="loadHrReport()" class="filter-input"
+          style="width: 100%;">
+      </div>
+    </div>
+
+    <!-- 2. Department Filter -->
+    <div class="card filter-card">
+      <span class="card-title">Departments</span>
+      <select class="filter-input" [(ngModel)]="selectedDepartment">
+        <option value="All">All</option>
+        <option *ngFor="let dept of dashboardData.attendanceByDept" [value]="dept.name">{{dept.name}}</option>
+      </select>
+    </div>
+
+    <!-- 3. Sick vs Casual Header/Stats -->
+    <div class="card">
+      <div class="card-title text-center" style="margin-bottom: 0;">Sick Leave vs. Casual Leave</div>
+      <div class="sick-casual-stats">
+        <div class="stat-split">
+          <span class="split-value">{{dashboardData.sickLeave}}</span>
+          <span class="split-label">Sick</span>
+        </div>
+        <div class="stat-split">
+          <span class="split-value">{{dashboardData.casualLeave}}</span>
+          <span class="split-label">Casual</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Location Breakdown (Donut) - Spanning 2 Rows -->
+    <div class="card donut-card"
+      style="grid-row: span 2; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+      <span class="card-title" style="margin-bottom: 5px;">Work Location Breakdown</span>
+
+      <div class="donut-chart-container" [style.background]="donutBackground"
+        style="width: 120px; height: 120px; flex-shrink: 0; margin-bottom: 15px;">
+        <div class="donut-inner"></div>
+      </div>
+
+      <div class="donut-legend" style="width: 100%; display: flex; justify-content: space-around; margin-top: 0;">
+        <div class="legend-item" style="display: flex; flex-direction: column; align-items: center;">
+          <div><span class="dot dot-home"></span> Home</div>
+          <span style="font-weight: 600; font-size: 1.1rem;">{{homeWorkCount}}</span>
+        </div>
+        <div class="legend-item" style="display: flex; flex-direction: column; align-items: center;">
+          <div><span class="dot dot-office"></span> Offline</div>
+          <span style="font-weight: 600; font-size: 1.1rem;">{{officeWorkCount}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Employees Absent -->
+    <div class="card">
+      <span class="card-title">Employees Absent</span>
+      <span class="card-value">{{absentEmployeeCount}}</span>
+    </div>
+
+    <!-- 6. Total Employees -->
+    <div class="card">
+      <span class="card-title">Total Employees</span>
+      <span class="card-value">{{totalEmployeeCount}}</span>
+    </div>
+
+    <!-- 7. Employee Days Present -->
+    <div class="card">
+      <span class="card-title">Employees Present</span>
+      <span class="card-value">{{presentEmployeeCount | number}}</span>
+    </div>
+
+    <!-- 8. Pre-approved Absences -->
+    <div class="card">
+      <span class="card-title">Pre-approved Absences</span>
+      <span class="card-value">{{dashboardData.preApprovedAbsences}}</span>
+    </div>
+
+    <!-- 9. Overtime Hours -->
+    <div class="card">
+      <span class="card-title">Overtime Hours</span>
+      <span class="card-value">{{dashboardData.overtimeHours}}</span>
+    </div>
+
+    <!-- 10. Attendance by Department (Bar Chart) - Spanning columns and rows -->
+    <div class="card bar-chart-card" style="grid-column: span 2; grid-row: span 3;">
+      <span class="card-title">Attendance by Department</span>
+      <div style="margin-top: 1rem;">
+        <div class="bar-row" *ngFor="let dept of dashboardData.attendanceByDept">
+          <div class="bar-label">{{dept.name}}</div>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width]="dept.value + '%'"></div>
+          </div>
+          <div class="bar-value">{{dept.value}}%</div>
+        </div>
+        <div
+          style="display: flex; justify-content: space-between; padding-left: 120px; font-size: 0.7rem; color: #9ca3af; margin-top: 0.5rem;">
+          <span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span><span>100%</span><span>120%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. Unscheduled Days Leave -->
+    <div class="card">
+      <span class="card-title">Unscheduled Days Leave</span>
+      <span class="card-value">{{dashboardData.unscheduledDaysLeave}}</span>
+    </div>
+
+    <!-- 12. Employees on Probation -->
+    <div class="card">
+      <span class="card-title">Employees on Probation</span>
+      <span class="card-value">{{dashboardData.employeesOnProbation}}</span>
+    </div>
+
+    <!-- 13. Attendance Rate (Gauge) -->
+    <div class="card gauge-card">
+      <span class="card-title">Attendance Rate</span>
+      <div style="position: relative; height: 100px; display: flex; flex-direction: column; align-items: center;">
+        <!-- Gauge Arc -->
+        <div style="position: relative; width: 140px; height: 70px; overflow: hidden;">
+          <div style="width: 140px; height: 140px; border-radius: 50%; background: #e5e7eb;">
+            <div
+              [style.background]="'conic-gradient(from -90deg at 50% 50%, #4c1d95 0deg, #4c1d95 ' + (attendanceRate * 1.8) + 'deg, transparent ' + (attendanceRate * 1.8) + 'deg)'"
+              style="width: 100%; height: 100%; border-radius: 50%;"></div>
+          </div>
+          <!-- Inner Cover Circle for Donut effect -->
+          <div
+            style="position: absolute; top: 15px; left: 15px; width: 110px; height: 110px; background: white; border-radius: 50%;">
+          </div>
+        </div>
+        <!-- Needle -->
+        <div
+          style="position: absolute; bottom: 30px; left: 50%; width: 2px; height: 45px; background: #374151; transform-origin: bottom center; z-index: 10; transition: transform 0.5s ease-out;"
+          [style.transform]="'rotate(' + ((attendanceRate * 1.8) - 90) + 'deg)'"></div>
+        <div
+          style="position: absolute; bottom: 26px; left: 50%; width: 8px; height: 8px; background: #374151; border-radius: 50%; transform: translateX(-50%); z-index: 10;">
+        </div>
+
+        <div
+          style="display: flex; justify-content: space-between; width: 100%; font-size: 0.65rem; color: #6b7280; padding: 0 10px; margin-top: 5px;">
+          <span>0</span><span>100</span>
+        </div>
+        <div class="card-value" style="font-size: 1.5rem; margin-top: 0;">{{attendanceRate}} %</div>
+      </div>
+    </div>
+
+    <!-- 14. Absenteeism Rate (Gauge) -->
+    <div class="card gauge-card">
+      <span class="card-title">Absenteeism Rate</span>
+      <div style="position: relative; height: 100px; display: flex; flex-direction: column; align-items: center;">
+        <!-- Gauge Arc -->
+        <div style="position: relative; width: 140px; height: 70px; overflow: hidden;">
+          <div style="width: 140px; height: 140px; border-radius: 50%; background: #e5e7eb;">
+            <div
+              [style.background]="'conic-gradient(from -90deg at 50% 50%, #be123c 0deg, #be123c ' + (absenteeismRate * 1.8) + 'deg, transparent ' + (absenteeismRate * 1.8) + 'deg)'"
+              style="width: 100%; height: 100%; border-radius: 50%;"></div>
+          </div>
+          <!-- Inner Cover Circle for Donut effect -->
+          <div
+            style="position: absolute; top: 15px; left: 15px; width: 110px; height: 110px; background: white; border-radius: 50%;">
+          </div>
+        </div>
+        <!-- Needle -->
+        <div
+          style="position: absolute; bottom: 30px; left: 50%; width: 2px; height: 45px; background: #374151; transform-origin: bottom center; z-index: 10; transition: transform 0.5s ease-out;"
+          [style.transform]="'rotate(' + ((absenteeismRate * 1.8) - 90) + 'deg)'"></div>
+        <div
+          style="position: absolute; bottom: 26px; left: 50%; width: 8px; height: 8px; background: #374151; border-radius: 50%; transform: translateX(-50%); z-index: 10;">
+        </div>
+
+        <div
+          style="display: flex; justify-content: space-between; width: 100%; font-size: 0.65rem; color: #6b7280; padding: 0 10px; margin-top: 5px;">
+          <span>0</span><span>100</span>
+        </div>
+        <div class="card-value" style="font-size: 1.5rem; margin-top: 0;">{{absenteeismRate}} %</div>
+      </div>
+    </div>
+    <!-- 15. Real-time Attendance Table -->
+    <div class="card" style="grid-column: span 4; margin-top: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <span class="card-title">Today's Attendance Overview</span>
+        <span class="text-xs text-mute" *ngIf="isLoadingReport">Loading...</span>
+      </div>
+
+      <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="attendance-table" style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; text-align: left;">
+              <th style="padding: 12px;">Employee Name</th>
+              <th style="padding: 12px;">Date</th>
+              <th style="padding: 12px;">Work Hours</th>
+              <th style="padding: 12px;">Late Mark</th>
+              <th style="padding: 12px;">Overtime</th>
+              <th style="padding: 12px;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let record of filteredHrReport" style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 12px; font-weight: 500;">{{record.employeeName}}</td>
+              <td style="padding: 12px;">{{record.date}}</td>
+              <td style="padding: 12px;">{{record.workingHours}}h</td>
+              <td style="padding: 12px;">
+                <span [class.text-danger]="record.lateMark">{{record.lateMark ? 'Yes' : 'No'}}</span>
+              </td>
+              <td style="padding: 12px;">{{record.overtime}}h</td>
+              <td style="padding: 12px;">
+                <span class="status-badge" [ngClass]="record.isPresent ? 'status-present' : 'status-absent'">
+                  {{record.isPresent ? 'Present' : 'Absent'}}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="filteredHrReport.length === 0 && !isLoadingReport">
+              <td colspan="6" style="padding: 24px; text-align: center; color: #94a3b8;">No records found for this
+                department today.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OLD INDIVIDUAL EMPLOYEE VIEW -->
+<div class="attendance-container" *ngIf="!showDashboard">
   <!-- Header Section -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-left">
         <h1 class="page-title">Attendance Management</h1>
+        <p class="text-mute">Employee: <strong>{{employeeCode()}}</strong></p>
+      </div>
+      <div>
+        <button class="btn-secondary" (click)="backToDashboard()" *ngIf="!authService.isEmployee()">
+          <i class="bi bi-grid-fill"></i> Back to Dashboard
+        </button>
       </div>
     </div>
   </header>
 
   <!-- Alert Messages -->
-  <div *ngIf="successMessage" class="alert alert-success">
-    ✓ {{ successMessage }}
-  </div>
-  <div *ngIf="errorMessage" class="alert alert-error">
-    ✗ {{ errorMessage }}
-  </div>
 
-  <!-- Quick Actions Section -->
-  <section class="actions-section">
+
+  <!-- Attendance Actions -->
+  <section class="actions-section" *ngIf="authService.isEmployee() || employeeCode()">
     <div class="action-card">
-      <div class="form-group">
-        <label for="employeeCode">Employee Code</label>
-        <input type="text" id="employeeCode" [(ngModel)]="employeeCode" placeholder="Enter employee code"
-          class="form-input" />
-      </div>
-      <div class="button-group">
-        <button class="btn-primary" (click)="checkIn()" [disabled]="loading || !employeeCode">
-          <span class="icon">🟢</span> Check In
+      <div class="check-actions">
+        <!-- Both buttons are now visible, but clicking them will show a local message if status is incorrect -->
+        <button *ngIf="authService.getRole() === 'EMPLOYEE'" class="btn-checkin" (click)="checkIn()"
+          [disabled]="isLoadingHistory">
+          <i class="bi bi-box-arrow-in-right"></i> Check In
         </button>
-        <button class="btn-secondary" (click)="checkOut()" [disabled]="loading || !employeeCode">
-          <span class="icon">🔴</span> Check Out
+
+        <button *ngIf="authService.getRole() === 'EMPLOYEE'" class="btn-checkout" (click)="checkOut()"
+          [disabled]="isLoadingHistory">
+          <i class="bi bi-box-arrow-right"></i> Check Out
         </button>
       </div>
+      <p class="text-xs text-mute mt-2">
+        Current Time: {{currentTime | date:'mediumTime'}}
+        <span class="status-indicator ml-2" [ngClass]="isCheckedIn() ? 'text-success' : 'text-danger'">
+          <i class="bi" [ngClass]="isCheckedIn() ? 'bi-person-check-fill' : 'bi-person-x-fill'"></i>
+          {{ isCheckedIn() ? 'Currently Checked In' : 'Not Checked In' }}
+        </span>
+      </p>
     </div>
   </section>
 
-  <!-- Summary Cards -->
-  <section class="stats-section">
-    <div class="stat-card" *ngIf="dailySummary">
-      <div class="stat-icon daily">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-      </div>
-      <div class="stat-info">
-        <p class="stat-label">Today's Hours</p>
-        <h2 class="stat-value">{{ dailySummary.totalHours | number:'1.1-1' }}h</h2>
-      </div>
-    </div>
-
-    <div class="stat-card" *ngIf="dailySummary">
-      <div class="stat-icon status" [ngClass]="getStatusIconClass(dailySummary.status)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-      </div>
-      <div class="stat-info">
-        <p class="stat-label">Status</p>
-        <h2 class="stat-value-small">{{ dailySummary.status }}</h2>
-      </div>
-    </div>
-  </section>
 
   <!-- Summary Controls -->
   <section class="summary-section">
@@ -70,9 +301,23 @@
       <h3 class="section-title">Daily Summary</h3>
       <div class="summary-controls">
         <input type="date" [(ngModel)]="selectedDate" class="form-input" />
-        <button class="btn-primary" (click)="loadDailySummary()" [disabled]="loading || !employeeCode">
-          Load Summary
+        <button class="btn-primary" (click)="loadDailySummary()" [disabled]="isLoadingDaily || !employeeCode()">
+          <span *ngIf="isLoadingDaily" class="spinner-border spinner-border-sm"></span>
+          {{ isLoadingDaily ? 'Loading...' : 'Load Summary' }}
         </button>
+      </div>
+
+      <div *ngIf="dailySummary" class="monthly-stats" style="margin-top: 1rem;">
+        <div class="monthly-stat">
+          <span class="monthly-label">Total Hours:</span>
+          <span class="monthly-value">{{ dailySummary.totalHours | number:'1.1-1' }}h</span>
+        </div>
+        <div class="monthly-stat">
+          <span class="monthly-label">Status:</span>
+          <span class="monthly-value" [ngClass]="getStatusClass(dailySummary.status)">
+            {{ dailySummary.status }}
+          </span>
+        </div>
       </div>
     </div>
 
@@ -94,8 +339,9 @@
           <option [value]="12">December</option>
         </select>
         <input type="number" [(ngModel)]="selectedYear" placeholder="Year" class="form-input" />
-        <button class="btn-primary" (click)="loadMonthlySummary()" [disabled]="loading || !employeeCode">
-          Load Summary
+        <button class="btn-primary" (click)="loadMonthlySummary()" [disabled]="isLoadingMonthly || !employeeCode()">
+          <span *ngIf="isLoadingMonthly" class="spinner-border spinner-border-sm"></span>
+          {{ isLoadingMonthly ? 'Loading...' : 'Load Summary' }}
         </button>
       </div>
 
@@ -112,14 +358,27 @@
   <section class="table-section">
     <div class="section-header">
       <h3 class="section-title">Attendance History</h3>
-      <button class="btn-secondary" (click)="loadAttendanceHistory()" [disabled]="loading || !employeeCode">
-        🔄 Refresh
-      </button>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <div
+          style="display: flex; align-items: center; gap: 5px; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+          <i class="bi bi-calendar-event text-secondary"></i>
+          <input type="date" [(ngModel)]="historyFilterDate" (change)="loadAttendanceHistory()" class="form-input-sm"
+            style="border: none; background: transparent; outline: none; font-size: 0.85rem; color: #475569;"
+            title="Filter by date" />
+          <i class="bi bi-x-circle text-danger" *ngIf="historyFilterDate"
+            (click)="historyFilterDate = ''; loadAttendanceHistory()" style="cursor: pointer; font-size: 0.85rem;"
+            title="Clear filter"></i>
+        </div>
+        <button class="btn-secondary btn-sm" (click)="onRefresh()" [disabled]="isLoadingHistory || !employeeCode()">
+          <i class="bi bi-arrow-clockwise" [class.bi-spin]="isLoadingHistory"></i>
+          {{ isLoadingHistory ? 'Refreshing...' : 'Refresh List' }}
+        </button>
+      </div>
     </div>
 
-    <div *ngIf="loading" class="loading-state">Loading...</div>
+    <div *ngIf="isLoadingHistory" class="loading-state">Loading history...</div>
 
-    <div *ngIf="!loading && attendanceHistory.length === 0" class="empty-state">
+    <div *ngIf="!isLoadingHistory && filteredHistory.length === 0" class="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -128,7 +387,7 @@
       <p>No attendance records found</p>
     </div>
 
-    <div *ngIf="!loading && attendanceHistory.length > 0" class="table-container">
+    <div *ngIf="filteredHistory.length > 0" class="table-container">
       <table class="attendance-table">
         <thead>
           <tr>
@@ -140,7 +399,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let record of attendanceHistory">
+          <tr *ngFor="let record of filteredHistory">
             <td>{{ formatDate(record.date) }}</td>
             <td>{{ formatTime(record.checkIn) }}</td>
             <td>{{ formatTime(record.checkOut) }}</td>

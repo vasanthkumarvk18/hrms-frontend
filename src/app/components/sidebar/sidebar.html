@@ -26,7 +26,7 @@
 
     <!-- Main Menu Items -->
     <nav class="menu-items">
-        <div *ngFor="let item of menuItems" class="menu-item-wrapper">
+        <div *ngFor="let item of filteredMenuItemsList" class="menu-item-wrapper">
             <div class="menu-item" [class.active]="isActive(item.route)" [class.has-children]="item.children"
                 (click)="item.children ? toggleSubmenu(item) : navigate(item.route)">
                 <span class="material-icons menu-icon">{{ item.icon }}</span>
@@ -43,17 +43,19 @@
 
             <!-- Submenu -->
             <div *ngIf="item.children && item.expanded" class="submenu">
-                <div *ngFor="let child of item.children" class="submenu-item" [class.active]="isActive(child.route)"
-                    (click)="navigate(child.route)">
-                    {{ child.label }}
-                </div>
+                <ng-container *ngFor="let child of item.children">
+                    <div *ngIf="canShowChild(child)" class="submenu-item" [class.active]="isActive(child.route)"
+                        (click)="navigate(child.route)">
+                        {{ child.label }}
+                    </div>
+                </ng-container>
             </div>
         </div>
     </nav>
 
     <!-- Bottom Menu Items -->
     <div class="bottom-menu">
-        <div *ngFor="let item of bottomMenuItems" class="menu-item-wrapper">
+        <div *ngFor="let item of filteredBottomMenuItemsList" class="menu-item-wrapper">
             <div class="menu-item" [class.active]="isActive(item.route)" [class.logout]="item.label === 'Log Out'"
                 [class.has-children]="item.children"
                 (click)="item.children ? toggleSubmenu(item) : navigate(item.route)">
@@ -68,10 +70,12 @@
 
             <!-- Submenu for bottom items -->
             <div *ngIf="item.children && item.expanded" class="submenu">
-                <div *ngFor="let child of item.children" class="submenu-item" [class.active]="isActive(child.route)"
-                    (click)="navigate(child.route)">
-                    {{ child.label }}
-                </div>
+                <ng-container *ngFor="let child of item.children">
+                    <div *ngIf="canShowChild(child)" class="submenu-item" [class.active]="isActive(child.route)"
+                        (click)="navigate(child.route)">
+                        {{ child.label }}
+                    </div>
+                </ng-container>
             </div>
         </div>
     </div>

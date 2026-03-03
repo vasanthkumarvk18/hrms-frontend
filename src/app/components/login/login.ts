@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent {
 
   loginRequest: LoginRequest = {
-    username: '',
+    email: '',
     password: ''
   };
 
@@ -33,7 +33,7 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    if (!this.loginRequest.username || !this.loginRequest.password) {
+    if (!this.loginRequest.email || !this.loginRequest.password) {
       this.toastr.error('Please fill in all fields', 'Validation Error');
       return;
     }
@@ -41,10 +41,19 @@ export class LoginComponent {
     this.authService.login(this.loginRequest).subscribe({
       next: () => {
         this.toastr.success('Login successful!', 'Welcome');
-        this.router.navigate(['/employees']);
+
+        // Navigate based on role after login
+        const role = this.authService.getRole();
+        if (role === 'EMPLOYEE') {
+          this.router.navigate(['/attendance']);
+        } else {
+          this.router.navigate(['/employees']);
+        }
       },
-      error: () => {
-        this.toastr.error('Invalid username or password', 'Login Failed');
+      error: (error) => {
+        console.error('Login Failed Detailed Error:', error);
+        const errorMsg = error.error?.message || error.error || 'Invalid email or password';
+        this.toastr.error(errorMsg, 'Login Failed');
       }
     });
   }

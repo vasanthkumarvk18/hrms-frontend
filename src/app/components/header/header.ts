@@ -36,11 +36,12 @@ export class Header implements OnInit {
   ngOnInit(): void {
     // Update user info from auth service
     const username = this.authService.getUsername();
+    const role = this.authService.getRole();
     if (username) {
       const initials = username.substring(0, 2).toUpperCase();
       this.currentUser.set({
         name: username,
-        role: 'User',
+        role: role || 'User',
         avatar: initials
       });
     }
